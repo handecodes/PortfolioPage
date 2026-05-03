@@ -11,13 +11,14 @@ body {
     padding: 16px;
 }
 
+/* NAV — pill shaped now */
 nav ul {
     display: flex;
     justify-content: center;
     padding: 0;
     margin: 10px;
     list-style: none;
-    gap: 1px;
+    gap: 8px;
 }
 
 nav a {
@@ -25,8 +26,8 @@ nav a {
     justify-content: center;
     color: #a7a7a7;
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 8px 20px;
+    border-radius: 999px;
     border: 1px solid rgba(167, 167, 167, 0.5);
     background: rgba(76, 76, 76, 0.29);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -42,7 +43,7 @@ nav a:hover {
     transform: scale(1.05);
 }
 
-
+/* HERO */
 .heroContainer {
     background-image: url('images/image.jpg');
     background-size: cover;
@@ -63,7 +64,6 @@ nav a:hover {
     display: block;
     border-radius: 50%;
     margin-right: 12rem;
-
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
 }
 
@@ -75,7 +75,7 @@ nav a:hover {
 
 .heroText {
     color: #eeeeee;
-    overflow-wrap: break-word;  
+    overflow-wrap: break-word;
     position: relative;
 }
 
@@ -89,9 +89,7 @@ nav a:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-/*link buttons styling*/
-
-/* From Uiverse.io by Valeron-T */ 
+/* SOCIAL LINKS */
 .card {
     display: flex;
     gap: 10px;
@@ -99,7 +97,7 @@ nav a:hover {
 }
 
 .card a {
-    flex: 1; 
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,25 +113,19 @@ nav a:hover {
     height: 60%;
 }
 
-
 .card .social-link-github:hover {
-  background-color: #242c34;
-  animation: bounce_613 0.4s linear;
-}
-
-.card .social-link-discord:hover {
-  background-color: #5865f2;
-  animation: bounce_613 0.4s linear;
+    background-color: #242c34;
+    animation: bounce_613 0.4s linear;
 }
 
 .card .social-link-linkedin:hover {
-  background-color: #0a66c2;
-  animation: bounce_613 0.4s linear;
+    background-color: #0a66c2;
+    animation: bounce_613 0.4s linear;
 }
 
 .card .social-link-email:hover {
-  background-color: #ff8000;
-  animation: bounce_613 0.4s linear;
+    background-color: #ff8000;
+    animation: bounce_613 0.4s linear;
 }
 
 .card .social-link-cv:hover {
@@ -141,52 +133,38 @@ nav a:hover {
     animation: bounce_613 0.4s linear;
 }
 
-
 @keyframes bounce_613 {
-  40% {
-    transform: scale(1.4);
-  }
-
-  60% {
-    transform: scale(0.8);
-  }
-
-  80% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+    40% { transform: scale(1.4); }
+    60% { transform: scale(0.8); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 
-
+/* TECH STACK TICKER */
 .techStackContainer {
-  overflow: hidden;
-  width: 100%;
-  background-color: #242c34;
-  height: 4rem;
+    overflow: hidden;
+    width: 100%;
+    background-color: #242c34;
+    height: 4rem;
 }
 
 .tech-stack {
-  display: flex;
-  gap: 6rem;
-  height: 100%;
-  align-items: center;
-  white-space: nowrap;
-  will-change: transform;
+    display: flex;
+    gap: 6rem;
+    height: 100%;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
 }
 
 .tech-stack span {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.2rem;
-  letter-spacing: 0.08em;
-  opacity: 0.85;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
 }
 
-
-/* ---------- TIMELINE ---------- */
-
+/* TIMELINE */
 .cvTimeline {
     background-color: #0e0e0e;
     padding-top: 1rem;
@@ -194,7 +172,7 @@ nav a:hover {
 
 .cvTimeline h2 {
     text-align: center;
-    font-family: 'JetBrains Mono', monospace;;
+    font-family: 'JetBrains Mono', monospace;
 }
 
 .timeline {
@@ -217,7 +195,7 @@ nav a:hover {
 
 .timelineMarker {
     position: absolute;
-    top: 50%; 
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 18px;
@@ -226,7 +204,6 @@ nav a:hover {
     border-radius: 50%;
 }
 
-/* Timeline items (experience cards) */
 .timelineItem {
     padding: 16px;
     background: rgba(76, 76, 76, 0.29);
@@ -250,7 +227,6 @@ nav a:hover {
     box-shadow: 0 6px 36px rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-
     transform: scale(1.10);
     transform-origin: right center;
 }
@@ -260,12 +236,10 @@ nav a:hover {
     box-shadow: 0 6px 36px rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-
     transform: scale(1.10);
     transform-origin: left center;
 }
 
-    
 .timelineWrapper {
     position: relative;
     height: auto;
@@ -282,8 +256,7 @@ nav a:hover {
     z-index: 10;
 }
 
-/*github sectiob*/
-
+/* PROJECTS SECTION */
 .projectsSection {
     padding: 80px 20px;
     width: 100%;
@@ -301,7 +274,7 @@ nav a:hover {
     font-size: 2rem;
     margin-bottom: 30px;
     font-weight: bold;
-    color: #fff; 
+    color: #fff;
 }
 
 .github-activity-container {
@@ -318,26 +291,15 @@ nav a:hover {
 
 .github-activity-container img {
     filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2);
-    mix-blend-mode: screen;    
+    mix-blend-mode: screen;
     width: 100%;
     max-width: 800px;
 }
 
-.github-stats {
-    margin-bottom: 50px;
-    display: flex;
-    justify-content: center;
-}
-
-.github-stats img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
+/* REPO CARDS — new with screenshot thumbnails */
 .repo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
     justify-items: center;
 }
@@ -346,27 +308,127 @@ nav a:hover {
     background: #1c1c1c;
     border: 1px solid #333;
     border-radius: 12px;
-    padding: 25px;
     width: 100%;
     max-width: 400px;
+    overflow: hidden;
     transition: all 0.3s ease;
+    text-align: left;
 }
 
 .repo-card:hover {
-    background: rgba(255, 255, 255, 0.29);
-    box-shadow: 0 6px 36px rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    border-color: #555;
     transform: translateY(-8px);
+    box-shadow: 0 6px 36px rgba(255, 255, 255, 0.08);
 }
 
-@media (max-width: 768px) {
+/* Screenshot thumbnail */
+.repo-thumb {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #111;
+    border-bottom: 1px solid #333;
+}
 
+.repo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    display: block;
+    background: #111;
+}
+
+.repo-card:hover .repo-thumb img {
+    transform: scale(1.04);
+}
+
+/* Terminal placeholder for console apps */
+.repo-terminal {
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.terminal-bar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot.r { background: #3a1a1a; }
+.dot.y { background: #3a2a0a; }
+.dot.g { background: #0a2a0a; }
+
+.terminal-line { color: #444; }
+.terminal-line.bright { color: #777; }
+.terminal-line.dim { color: #2a2a2a; }
+
+/* Card body */
+.repo-card-body {
+    padding: 16px 20px;
+}
+
+.repo-card-body h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 6px;
+}
+
+.repo-card-body p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.repo-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.repo-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.repo-lang.cs,
+.repo-lang.js,
+.repo-lang.html,
+.repo-lang.sql { background: rgba(255, 255, 255, 0.08); color: #a7a7a7; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+.repo-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.repo-card:hover .repo-link {
+    color: #aaa;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
     nav ul {
         flex-direction: row;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 2px;
+        gap: 6px;
     }
 
     .heroContainer {
@@ -383,7 +445,4 @@ nav a:hover {
     .timeline h3 {
         font-size: 16px;
     }
-    
 }
-
-
