@@ -16,16 +16,20 @@
     <header>
         <nav aria-label="Main navigation">
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#cvAnchor">Experience</a></li>
-                <li><a href="#projectsAnchor">Projects</a></li>
+                <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                <li><a href="#cvAnchor" data-i18n="nav.experience">Experience</a></li>
+                <li><a href="#projectsAnchor" data-i18n="nav.projects">Projects</a></li>
             </ul>
+            <div class="langToggle">
+                <button class="langBtn active" data-lang="en">EN</button>
+                <button class="langBtn" data-lang="sv">SV</button>
+            </div>
         </nav>
     </header>
 
     <main>
 
-        <!-- Hero / Introduction -->
+        <!-- Hero -->
         <section aria-labelledby="intro-heading">
             <div class="heroContainer">
                 <div class="heroPic">
@@ -33,12 +37,13 @@
                 </div>
                 <div class="aboutMe">
                     <div class="heroText">
-                        <h1 id="intro-heading">Hi, I'm Hande.</h1>
-                        <p>Fullstack .NET Developer student</p>
+                        <h1 id="intro-heading" data-i18n="hero.greeting">Hi, I'm Hande.</h1>
+                        <p data-i18n="hero.title">Fullstack .NET Developer student</p>
+                        <a href="#storySection" id="storyBtn" data-i18n="hero.storyBtn">My Story →</a>
                     </div>
 
                     <section class="jediCTA">
-                        <p class="jediText">
+                        <p class="jediText" data-i18n="hero.jedi">
                             Am I the Jedi you are looking for? <br>
                             Download my CV or contact me!
                         </p>
@@ -70,6 +75,27 @@
             </div>
         </section>
 
+        <!-- Story Section (hidden by default) -->
+        <section id="storySection">
+            <div class="storyInner">
+                <p class="storyLabel" data-i18n="story.label">The backstory</p>
+                <h2 class="storyHeading">
+                    <span data-i18n="story.heading">Why I Switched Careers</span><br>
+                    <span data-i18n="story.subheading">(A Love Story Gone Wrong)</span>
+                </h2>
+                <div class="storyBody">
+                    <p data-i18n="story.p1">At 18, my family handed me a life plan: become a doctor or dentist. I picked dentist. How bad could teeth be?</p>
+                    <p class="storyHighlight" data-i18n="story.p2">Reader, teeth are bad.</p>
+                    <p data-i18n="story.p3">Not the teeth themselves — the job. Same chair, same drill, same "open wide" every day. And you don't just fix teeth, you perform. Patient one wants brutal honesty. Patient two is terrified. Patient three wants a 45-minute lecture on their cavity. You become a different person for each one — sometimes all before lunch. By 5pm I had no idea who I was anymore.</p>
+                    <p data-i18n="story.p4">So I hid in academia. A PhD in Endodontics. Root canals, but make it research. The problem? Dental healthcare moves at a glacial pace — we were still having passionate debates about which toothpaste is best, while in tech something new drops every week and you're already behind if you took a long weekend.</p>
+                    <p data-i18n="story.p5">I did find one thing I loved: data analysis. Breaking models, fixing them, making numbers make sense. That felt suspiciously fun.</p>
+                    <blockquote class="storyQuote" data-i18n="story.quote">Eventually the thought arrived: what if I just did that? Without the teeth?</blockquote>
+                    <p data-i18n="story.p6">Some online courses later — enrolled in fullstack .NET, traded the drill for a keyboard, and replaced "open wide" with "it works on my machine."</p>
+                    <p class="storyClosing" data-i18n="story.closing">Zero regrets. The teeth can find someone else.</p>
+                </div>
+            </div>
+        </section>
+
         <section class="techStackContainer">
             <div class="tech-stack" id="techStack">
                 <span>C# / .NET</span>
@@ -94,56 +120,46 @@
 
         <!-- Experience / CV -->
         <section class="cvTimeline" id="cvAnchor">
-            <h2>Experience</h2>
+            <h2 data-i18n="nav.experience">Experience</h2>
             <div class="timelineWrapper">
                 <img src="images/walker.png" alt="Walking girl" class="timelineWalker">
                 <div class="timeline">
                     <article class="timelineItem timelineItemRight">
                         <header>
-                            <time datetime="2025-09">September 2025</time> – Present
+                            <time datetime="2025-09" data-i18n="timeline.sep2025">September 2025</time> – <span data-i18n="timeline.present">Present</span>
                         </header>
-                        <h3>Fullstack .NET Developer Student</h3>
+                        <h3 data-i18n="timeline.job1.title">Fullstack .NET Developer Student</h3>
                         <p>Chas Academy</p>
                     </article>
 
-                    <div class="timelineMiddle">
-                        <div class="timelineMarker"></div>
-                    </div>
-
-                    <div class="timelineMiddle">
-                        <div class="timelineMarker"></div>
-                    </div>
+                    <div class="timelineMiddle"><div class="timelineMarker"></div></div>
+                    <div class="timelineMiddle"><div class="timelineMarker"></div></div>
 
                     <article class="timelineItem timelineItemLeft">
                         <header>
-                            <time datetime="2024-05">May 2024</time> – August 2025
+                            <time datetime="2024-05" data-i18n="timeline.may2024">May 2024</time> – <span data-i18n="timeline.aug2025">August 2025</span>
                         </header>
-                        <h3>Dental Nurse</h3>
-                        <p>Hägernäs Dental Clinic, Täby</p>
+                        <h3 data-i18n="timeline.job2.title">Dental Nurse</h3>
+                        <p data-i18n="timeline.job2.place">Hägernäs Dental Clinic, Täby</p>
                     </article>
 
                     <article class="timelineItem timelineItemRight">
                         <header>
-                            <time datetime="2019-09">September 2019</time> – July 2025
+                            <time datetime="2019-09" data-i18n="timeline.sep2019">September 2019</time> – <span data-i18n="timeline.jul2025">July 2025</span>
                         </header>
-                        <h3>PhD in Endodontics</h3>
-                        <p>Gazi University, Turkey</p>
+                        <h3 data-i18n="timeline.job3.title">PhD in Endodontics</h3>
+                        <p data-i18n="timeline.job3.place">Gazi University, Turkey</p>
                     </article>
 
-                    <div class="timelineMiddle">
-                        <div class="timelineMarker"></div>
-                    </div>
-
-                    <div class="timelineMiddle">
-                        <div class="timelineMarker"></div>
-                    </div>
+                    <div class="timelineMiddle"><div class="timelineMarker"></div></div>
+                    <div class="timelineMiddle"><div class="timelineMarker"></div></div>
 
                     <article class="timelineItem timelineItemLeft">
                         <header>
-                            <time datetime="2014-09">September 2014</time> – June 2019
+                            <time datetime="2014-09" data-i18n="timeline.sep2014">September 2014</time> – <span data-i18n="timeline.jun2019">June 2019</span>
                         </header>
-                        <h3>Dentistry Degree and Master's Degree</h3>
-                        <p>Baskent University, Turkey</p>
+                        <h3 data-i18n="timeline.job4.title">Dentistry Degree and Master's Degree</h3>
+                        <p data-i18n="timeline.job4.place">Baskent University, Turkey</p>
                     </article>
                 </div>
             </div>
@@ -151,94 +167,12 @@
 
         <section class="projectsSection" id="projectsAnchor">
             <div class="projects-container">
-                <h2 class="section-title">GitHub Activity</h2>
-
+                <h2 class="section-title" data-i18n="projects.activity">GitHub Activity</h2>
                 <div class="github-activity-container">
                     <img src="https://ghchart.rshah.org/a855f7/handechasacademy" alt="GitHub Contributions Grid" />
                 </div>
-
-                <h2 class="section-title">Featured Repositories</h2>
-
-                <div id="repo-grid" class="repo-grid">
-
-                    <!-- Deployed projects with screenshots -->
-                    <div class="repo-card">
-                        <div class="repo-thumb">
-                            <img src="images/screenshots/unstuck.png" alt="UnstuckApp screenshot">
-                        </div>
-                        <div class="repo-card-body">
-                            <h3>UnstuckApp</h3>
-                            <p>AI-powered task breakdown for ADHD, turns overwhelming goals into tiny manageable steps</p>
-                            <div class="repo-card-footer">
-                                <span class="repo-lang cs">C# / React</span>
-                                <a href="https://github.com/handechasacademy" target="_blank" class="repo-link">View Code →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="repo-card">
-                        <div class="repo-thumb">
-                            <img src="images/screenshots/portfolio.png" alt="Portfolio screenshot">
-                        </div>
-                        <div class="repo-card-body">
-                            <h3>Portfolio Page</h3>
-                            <p>This page is a personal developer portfolio with animated timeline and GitHub activity</p>
-                            <div class="repo-card-footer">
-                                <span class="repo-lang html">HTML / CSS / JS</span>
-                                <a href="https://github.com/handechasacademy" target="_blank" class="repo-link">View Code →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="repo-card">
-                        <div class="repo-thumb">
-                            <img src="images/screenshots/timer.png" alt="Timer App screenshot">
-                        </div>
-                        <div class="repo-card-body">
-                            <h3>Timer App</h3>
-                            <p>Group project - a collaborative timer application built together with classmates</p>
-                            <div class="repo-card-footer">
-                                <span class="repo-lang js">JavaScript</span>
-                                <a href="https://github.com/handechasacademy" target="_blank" class="repo-link">View Code →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="repo-card">
-                        <div class="repo-thumb">
-                            <img src="images/screenshots/photogallery.png" alt="Photo Gallery screenshot">
-                        </div>
-                        <div class="repo-card-body">
-                            <h3>Photo Gallery</h3>
-                            <p>A responsive photo gallery with filtering and lightbox viewing</p>
-                            <div class="repo-card-footer">
-                                <span class="repo-lang html">HTML / CSS / JS</span>
-                                <a href="https://github.com/handechasacademy" target="_blank" class="repo-link">View Code →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Console apps with terminal placeholder -->
-                    <div class="repo-card">
-                        <div class="repo-thumb repo-terminal">
-                            <div class="terminal-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
-                            <div class="terminal-line dim">$ dotnet run BankProjekt</div>
-                            <div class="terminal-line bright">&gt; Account created: #4821</div>
-                            <div class="terminal-line">&gt; Deposit: 5000 SEK</div>
-                            <div class="terminal-line dim">&gt; Balance: 5000.00 SEK</div>
-                            <div class="terminal-line">&gt; Withdraw: 200 SEK</div>
-                            <div class="terminal-line bright">&gt; Balance: 4800.00 SEK</div>
-                        </div>
-                        <div class="repo-card-body">
-                            <h3>BankProjekt</h3>
-                            <p>Banking application with account management and transaction logic</p>
-                            <div class="repo-card-footer">
-                                <span class="repo-lang cs">C#</span>
-                                <a href="https://github.com/handechasacademy" target="_blank" class="repo-link">View Code →</a>
-                            </div>
-                        </div>
-                    </div>                 
-                </div>
+                <h2 class="section-title" data-i18n="projects.featured">Featured Repositories</h2>
+                <div id="repo-grid" class="repo-grid"></div>
             </div>
         </section>
 
