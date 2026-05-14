@@ -94,6 +94,12 @@ function applyLanguage(lang) {
 
     // Update story button text if story is open
     const storyBtn = document.getElementById('storyBtn');
+    // Swap CV download link
+    const cvLink = document.querySelector('.social-link-cv');
+    if (cvLink) {
+        cvLink.href = lang === 'sv' ? 'assets/HandeBenguCV_SV.pdf' : 'assets/HandeBenguCV_EN.pdf';
+    }
+
     const storySection = document.getElementById('storySection');
     if (storySection.style.display === 'block') {
         storyBtn.textContent = t['hero.storyBtnClose'];
