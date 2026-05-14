@@ -95,7 +95,7 @@ function applyLanguage(lang) {
     // Update story button text if story is open
     const storyBtn = document.getElementById('storyBtn');
     const storySection = document.getElementById('storySection');
-    if (storySection.classList.contains('storyVisible')) {
+    if (storySection.style.display === 'block') {
         storyBtn.textContent = t['hero.storyBtnClose'];
     }
 
@@ -117,9 +117,9 @@ document.querySelectorAll('.langBtn').forEach(btn => {
 document.getElementById('storyBtn').addEventListener('click', function(e) {
     e.preventDefault();
     const section = document.getElementById('storySection');
-    const isHidden = !section.classList.contains('storyVisible');
+    const isHidden = section.style.display === 'none' || section.style.display === '';
     const t = translations[currentLang];
-    section.classList.toggle('storyVisible', isHidden);
+    section.style.display = isHidden ? 'block' : 'none';
     this.innerHTML = isHidden ? t['hero.storyBtnClose'] : t['hero.storyBtn'];
     if (isHidden) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
