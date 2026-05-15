@@ -194,7 +194,7 @@ window.addEventListener('resize', recalcBounds);
 // ============================================================
 // GITHUB REPOS
 // ============================================================
-const username = 'handechasacademy';
+const username = 'handecodes';
 
 const deployedProjects = {
     'UnstuckApp':    { screenshot: 'images/screenshots/unstuck.png',      desc: 'AI-powered task breakdown for ADHD — turns overwhelming goals into tiny manageable steps', lang: 'C# / React',      langClass: 'cs' },
