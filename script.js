@@ -39,6 +39,13 @@ const translations = {
         'timeline.job4.place':  'Baskent University, Turkey',
         'projects.activity':    'GitHub Activity',
         'projects.featured':    'Featured Repositories',
+        'a11y.skip':            'Skip to content',
+        'repos.loading':        'Loading projects…',
+        'repos.error':          "Couldn't load projects right now.",
+        'repos.rateLimit':      'GitHub is rate-limiting requests. Please try again in a few minutes.',
+        'repos.retry':          'Try again',
+        'repos.viewCode':       'View Code →',
+        'repos.noDesc':         'No description provided.',
     },
     sv: {
         'nav.home':             'Hem',
@@ -77,8 +84,25 @@ const translations = {
         'timeline.job4.place':  'Baskent universitetet, Turkiet',
         'projects.activity':    'GitHub-aktivitet',
         'projects.featured':    'Utvalda projekt',
+        'a11y.skip':            'Hoppa till innehåll',
+        'repos.loading':        'Laddar projekt…',
+        'repos.error':          'Kunde inte ladda projekt just nu.',
+        'repos.rateLimit':      'GitHub begränsar förfrågningar. Försök igen om några minuter.',
+        'repos.retry':          'Försök igen',
+        'repos.viewCode':       'Visa kod →',
+        'repos.noDesc':         'Ingen beskrivning angiven.',
     }
 };
+
+// Respect the OS "reduce motion" preference for all JS-driven motion.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+// Escape user/API-supplied strings before injecting them as HTML.
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+}
 
 let currentLang = 'en';
 
@@ -107,8 +131,13 @@ function applyLanguage(lang) {
 
     // Highlight active button
     document.querySelectorAll('.langBtn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
+        const isActive = btn.dataset.lang === lang;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
     });
+
+    // Re-render the repo chrome (e.g. "View Code") in the new language.
+    renderProjects();
 }
 
 // Language buttons
@@ -125,9 +154,28 @@ document.getElementById('storyBtn').addEventListener('click', function(e) {
     const section = document.getElementById('storySection');
     const isHidden = section.style.display === 'none' || section.style.display === '';
     const t = translations[currentLang];
-    section.style.display = isHidden ? 'block' : 'none';
     this.innerHTML = isHidden ? t['hero.storyBtnClose'] : t['hero.storyBtn'];
-    if (isHidden) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    this.setAttribute('aria-expanded', String(isHidden));
+
+    if (isHidden) {
+        section.style.display = 'block';
+        if (!reduceMotion.matches && section.animate) {
+            section.animate(
+                [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }],
+                { duration: 460, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+            );
+        }
+        section.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' });
+    } else if (!reduceMotion.matches && section.animate) {
+        // exit is quicker than entrance (~75% feel), then unmount
+        const anim = section.animate(
+            [{ opacity: 1 }, { opacity: 0, transform: 'translateY(8px)' }],
+            { duration: 200, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' }
+        );
+        anim.onfinish = () => { section.style.display = 'none'; };
+    } else {
+        section.style.display = 'none';
+    }
 });
 
 
@@ -137,26 +185,41 @@ document.getElementById('storyBtn').addEventListener('click', function(e) {
 const techStack = document.getElementById('techStack');
 const techStackContainer = document.querySelector('.techStackContainer');
 
-const items = Array.from(techStack.children);
-const stackWidth = techStack.scrollWidth;
-const containerWidth = techStackContainer.offsetWidth;
-const duplicates = Math.ceil(containerWidth / stackWidth) + 3;
+// Marquee is decorative motion — only run it when motion is welcome.
+if (!reduceMotion.matches) {
+    const items = Array.from(techStack.children);
+    const stackWidth = techStack.scrollWidth;
+    const containerWidth = techStackContainer.offsetWidth;
+    const duplicates = Math.ceil(containerWidth / stackWidth) + 3;
 
-for (let i = 0; i < duplicates; i++) {
-    items.forEach(item => techStack.appendChild(item.cloneNode(true)));
+    for (let i = 0; i < duplicates; i++) {
+        items.forEach(item => techStack.appendChild(item.cloneNode(true)));
+    }
+
+    let stackPosition = 0;
+    const stackSpeed = 0.5;
+    let stackRAF = null;
+    // Measure the loop point once — content is static, so scrollWidth never changes.
+    // (Reading it inside the frame loop forces a layout every frame.)
+    const halfWidth = techStack.scrollWidth / 2;
+
+    function slideTechStack() {
+        stackPosition -= stackSpeed;
+        if (Math.abs(stackPosition) >= halfWidth) stackPosition = 0;
+        techStack.style.transform = `translateX(${stackPosition}px)`;
+        stackRAF = requestAnimationFrame(slideTechStack);
+    }
+
+    function startTicker() { if (stackRAF === null) slideTechStack(); }
+    function stopTicker()  { if (stackRAF !== null) { cancelAnimationFrame(stackRAF); stackRAF = null; } }
+
+    // Don't burn frames while the tab is in the background.
+    document.addEventListener('visibilitychange', () => {
+        document.hidden ? stopTicker() : startTicker();
+    });
+
+    startTicker();
 }
-
-let stackPosition = 0;
-const stackSpeed = 0.5;
-
-function slideTechStack() {
-    stackPosition -= stackSpeed;
-    if (Math.abs(stackPosition) >= techStack.scrollWidth / 2) stackPosition = 0;
-    techStack.style.transform = `translateX(${stackPosition}px)`;
-    requestAnimationFrame(slideTechStack);
-}
-
-slideTechStack();
 
 
 // ============================================================
@@ -166,29 +229,48 @@ const walker = document.querySelector('.timelineWalker');
 const timelineWrapper = document.querySelector('.timelineWrapper');
 const timelineItems = document.querySelectorAll('.timelineItem');
 const walkerSpeed = 0.4;
-let topPosition, minY, maxY;
+let topPosition, minY, maxY, walkerHeight = 0, walkerRAF = null;
 
+// All layout reads happen here (once on load / resize), never inside the frame loop.
 function recalcBounds() {
     const wrapperRect = timelineWrapper.getBoundingClientRect();
     const itemRects = Array.from(timelineItems).map(i => i.getBoundingClientRect());
     minY = Math.min(...itemRects.map(r => r.top)) - wrapperRect.top;
     maxY = Math.max(...itemRects.map(r => r.bottom)) - wrapperRect.top;
+    walkerHeight = walker.offsetHeight;
 }
 
 function animateWalker() {
     topPosition -= walkerSpeed;
-    if (topPosition < minY - walker.offsetHeight) topPosition = maxY;
-    walker.style.top = `${topPosition}px`;
-    requestAnimationFrame(animateWalker);
+    if (topPosition < minY - walkerHeight) topPosition = maxY;
+    // transform (compositor-only) instead of `top` (layout) — no reflow per frame
+    walker.style.transform = `translate(-50%, ${topPosition}px)`;
+    walkerRAF = requestAnimationFrame(animateWalker);
 }
 
-window.addEventListener('load', () => {
-    recalcBounds();
-    topPosition = maxY;
-    animateWalker();
-});
+function startWalker() { if (walkerRAF === null) animateWalker(); }
+function stopWalker()  { if (walkerRAF !== null) { cancelAnimationFrame(walkerRAF); walkerRAF = null; } }
 
-window.addEventListener('resize', recalcBounds);
+// The walking figure is purely decorative; skip it entirely under reduced motion.
+if (walker && !reduceMotion.matches) {
+    window.addEventListener('load', () => {
+        recalcBounds();
+        topPosition = maxY;
+        startWalker();
+    });
+
+    // rAF-coalesce resize so a burst of events triggers one measurement, not dozens.
+    let resizeQueued = false;
+    window.addEventListener('resize', () => {
+        if (resizeQueued) return;
+        resizeQueued = true;
+        requestAnimationFrame(() => { recalcBounds(); resizeQueued = false; });
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        document.hidden ? stopWalker() : startWalker();
+    });
+}
 
 
 // ============================================================
@@ -229,50 +311,154 @@ function buildTerminalThumb(lines) {
 }
 
 function buildScreenshotThumb(src, name) {
-    return `<div class="repo-thumb"><img src="${src}" alt="${name} screenshot"></div>`;
+    return `<div class="repo-thumb"><img src="${escapeHTML(src)}" alt="${escapeHTML(name)} screenshot" loading="lazy" decoding="async"></div>`;
+}
+
+// Project shown manually (group repo, not under this account).
+const timerCard = {
+    name: 'Timer App',
+    url: 'https://github.com/BwunLevain/Timelog-App',
+    thumbHTML: buildScreenshotThumb('images/screenshots/timer.png', 'Timer App'),
+    desc: 'Group project — a collaborative timer application built together with classmates',
+    lang: 'JavaScript',
+    langClass: 'js'
+};
+
+// Single source of truth for the projects section so we can re-render on
+// language change without re-fetching, and show clear loading/error states.
+const projectsState = { status: 'loading', items: [], errorKey: 'repos.error' };
+
+function renderProjects(animate = false) {
+    const grid = document.getElementById('repo-grid');
+    if (!grid) return;
+    const t = translations[currentLang];
+
+    if (projectsState.status === 'loading') {
+        grid.setAttribute('aria-busy', 'true');
+        grid.innerHTML = Array.from({ length: 6 }).map(() =>
+            `<div class="repo-skeleton" aria-hidden="true"><div class="sk-thumb"></div>` +
+            `<div class="sk-body"><div class="sk-line w90"></div><div class="sk-line w60"></div>` +
+            `<div class="sk-line w40"></div></div></div>`
+        ).join('') +
+        `<p class="repo-status" role="status">${escapeHTML(t['repos.loading'])}</p>`;
+        return;
+    }
+
+    grid.setAttribute('aria-busy', 'false');
+
+    if (projectsState.status === 'error') {
+        grid.innerHTML =
+            `<div class="repo-status" role="alert">` +
+            `<p>${escapeHTML(t[projectsState.errorKey] || t['repos.error'])}</p>` +
+            `<button type="button" class="repo-retry">${escapeHTML(t['repos.retry'])}</button>` +
+            `</div>`;
+        grid.querySelector('.repo-retry').addEventListener('click', loadProjects);
+        return;
+    }
+
+    grid.innerHTML = projectsState.items.map((item, i) => {
+        const desc = item.desc || t['repos.noDesc'];
+        const lang = item.lang || 'Code';
+        const inner = `${item.thumbHTML}<div class="repo-card-body">` +
+            `<h3>${escapeHTML(item.name)}</h3>` +
+            `<p>${escapeHTML(desc)}</p>` +
+            `<div class="repo-card-footer">` +
+            `<span class="repo-lang ${escapeHTML(item.langClass || '')}">${escapeHTML(lang)}</span>` +
+            `<a href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="repo-link">${escapeHTML(t['repos.viewCode'])}</a>` +
+            `</div></div>`;
+        const cls = animate ? 'repo-card repo-card--enter' : 'repo-card';
+        const style = animate ? ` style="--i:${i}"` : '';
+        return `<div class="${cls}"${style}>${inner}</div>`;
+    }).join('');
 }
 
 async function loadProjects() {
-    const grid = document.getElementById('repo-grid');
     const order = ['UnstuckApp', 'Photo_Gallery', 'PortfolioPage', 'BankProjekt', 'LibraryDB', 'ContactCatalog', 'OrbitalTransferCalculator', 'Calculator'];
+
+    projectsState.status = 'loading';
+    renderProjects();
 
     try {
         const response = await fetch(`https://api.github.com/users/${username}/repos`);
+
+        if (!response.ok) {
+            // 403/429 from GitHub's unauthenticated rate limit is the common real-world failure.
+            projectsState.status = 'error';
+            projectsState.errorKey = (response.status === 403 || response.status === 429)
+                ? 'repos.rateLimit' : 'repos.error';
+            renderProjects();
+            return;
+        }
+
         const allRepos = await response.json();
+        if (!Array.isArray(allRepos)) throw new Error('Unexpected API response');
+
         const repoMap = {};
         allRepos.forEach(r => repoMap[r.name] = r);
 
-        grid.innerHTML = '';
-        addTimerCard();
-
+        const items = [timerCard];
         order.forEach(name => {
             const repo = repoMap[name];
             if (!repo) return;
 
             const deployed = deployedProjects[name];
             const terminal = terminalPreviews[name];
-            const thumb = deployed ? buildScreenshotThumb(deployed.screenshot, name) : buildTerminalThumb(terminal || ['$ ' + name]);
-            const desc = deployed ? deployed.desc : (repo.description || 'No description provided.');
-            const lang = deployed ? deployed.lang : (repo.language || 'Code');
-            const cls  = deployed ? deployed.langClass : getLangClass(repo.language);
-
-            const card = document.createElement('div');
-            card.className = 'repo-card';
-            card.innerHTML = `${thumb}<div class="repo-card-body"><h3>${repo.name}</h3><p>${desc}</p><div class="repo-card-footer"><span class="repo-lang ${cls}">${lang}</span><a href="${repo.html_url}" target="_blank" class="repo-link">View Code →</a></div></div>`;
-            grid.appendChild(card);
+            items.push({
+                name: repo.name,
+                url: repo.html_url,
+                thumbHTML: deployed
+                    ? buildScreenshotThumb(deployed.screenshot, name)
+                    : buildTerminalThumb(terminal || ['$ ' + name]),
+                desc: deployed ? deployed.desc : (repo.description || ''),
+                lang: deployed ? deployed.lang : (repo.language || ''),
+                langClass: deployed ? deployed.langClass : getLangClass(repo.language)
+            });
         });
 
+        projectsState.items = items;
+        projectsState.status = items.length ? 'ready' : 'empty';
+        if (projectsState.status === 'empty') { projectsState.status = 'error'; projectsState.errorKey = 'repos.error'; }
+        renderProjects(projectsState.status === 'ready');
+
     } catch (error) {
-        grid.innerHTML = '<p>Error loading projects.</p>';
+        projectsState.status = 'error';
+        projectsState.errorKey = 'repos.error';
+        renderProjects();
     }
 }
 
-function addTimerCard() {
-    const grid = document.getElementById('repo-grid');
-    const card = document.createElement('div');
-    card.className = 'repo-card';
-    card.innerHTML = `<div class="repo-thumb"><img src="images/screenshots/timer.png" alt="Timer App screenshot"></div><div class="repo-card-body"><h3>Timer App</h3><p>Group project - a collaborative timer application built together with classmates</p><div class="repo-card-footer"><span class="repo-lang">JavaScript</span><a href="https://github.com/BwunLevain/Timelog-App" target="_blank" class="repo-link">View Code →</a></div></div>`;
-    grid.appendChild(card);
-}
-
 loadProjects();
+
+
+// ============================================================
+// SCROLL-DRIVEN MOTION (IntersectionObserver — no scroll listeners)
+// ============================================================
+
+// Sticky-nav gains elevation once the page scrolls past the very top.
+(() => {
+    const sentinel = document.getElementById('topSentinel');
+    const header = document.querySelector('header');
+    if (sentinel && header && 'IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => {
+            header.classList.toggle('scrolled', !entry.isIntersecting);
+        }).observe(sentinel);
+    }
+})();
+
+// Timeline items reveal as they enter view — a real ordered sequence, not a
+// blanket section fade. Classes are added here so no-JS visitors see them as-is.
+(() => {
+    if (reduceMotion.matches || !('IntersectionObserver' in window)) return;
+    const items = document.querySelectorAll('.timelineItem');
+    if (!items.length) return;
+    items.forEach(el => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2, rootMargin: '0px 0px -10% 0px' });
+    items.forEach(el => io.observe(el));
+})();
